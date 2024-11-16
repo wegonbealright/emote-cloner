@@ -16,12 +16,12 @@ export function isFFZURLValid(url: string) {
 /** Checks if provided URL points to 7TV */
 export function is7TVURLValid(url: string, urlType: 'emotes' | 'users' | 'emote-sets') {
     switch (urlType) {
-        default:
-            return /^((http|https):\/\/)(www\.|)7tv\.app\/emotes\/[a-zA-Z0-9]{24}(\/|)$/gi.test(url)
+        default: // For 'emotes'
+            return /^https:\/\/(www\.)?7tv\.app\/emotes\/[a-zA-Z0-9]+(\/|\?.*)?$/i.test(url);
         case 'users':
-            return /^((http|https):\/\/)(www\.|)7tv\.app\/users\/[a-zA-Z0-9]{24}(\/|)$/gi.test(url)
+            return /^https:\/\/(www\.)?7tv\.app\/users\/[a-zA-Z0-9]+(\/|\?.*)?$/i.test(url);
         case 'emote-sets':
-            return /^((http|https):\/\/)(www\.|)7tv\.app\/emote-sets\/[a-zA-Z0-9]{24}(\/|)$/gi.test(url)
+            return /^https:\/\/(www\.)?7tv\.app\/emote-sets\/[a-zA-Z0-9]+(\/|\?.*)?$/i.test(url);
     }
 }
 
