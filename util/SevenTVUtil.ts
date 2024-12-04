@@ -2,13 +2,7 @@ import { Emote } from "./BetterTTVUtil";
 
 
 export async function getEmoteDataFromURL(url: string) {
-    const match = url.match(/\/emotes\/([a-zA-Z0-9]+)/);
-    if (!match) {
-        throw new Error("Invalid 7TV emote URL");
-    }
-    const id = match[1];
-    return await getEmoteData(id);
-
+    return await getEmoteData(url.split('/')[4].split('/')[0])
 }
 
 interface SevenTVEmote {
