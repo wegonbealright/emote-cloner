@@ -75,11 +75,14 @@ export class EmoteCommand extends Command {
 
             console.log("Fetched emote data:", emote);
 
+            // Ensure fully qualified host URL
+            const hostURL = emote.hostURL.startsWith('//') ? `https:${emote.hostURL}` : emote.hostURL;
+
             const name: string = nameOption ? (nameOption.value as string) : emote.name;
             const disableAnimations = disableAnimationsOption ? (disableAnimationsOption.value as boolean) : false;
 
-            const animatedURL = emote.hostURL.replace('{{size}}', sizeOption ? (platform === 'bttv' && sizeOption.value === '4x' ? '3x' : sizeOption.value as string) : '2x') + '.gif';
-            const staticURL = emote.hostURL.replace('{{size}}', sizeOption ? (platform === 'bttv' && sizeOption.value === '4x' ? '3x' : sizeOption.value as string) : '4x') + '.webp';
+            const animatedURL = hostURL.replace('{{size}}', sizeOption ? (platform === 'bttv' && sizeOption.value === '4x' ? '3x' : sizeOption.value as string) : '2x') + '.gif';
+            const staticURL = hostURL.replace('{{size}}', sizeOption ? (platform === 'bttv' && sizeOption.value === '4x' ? '3x' : sizeOption.value as string) : '4x') + '.webp';
 
             console.log("Constructed emote URLs:", { animatedURL, staticURL });
 
@@ -131,10 +134,4 @@ export class EmoteCommand extends Command {
             }
         });
     }
-}
-
-function errorMessage(err: Error) {
-    if (err.message.includes("Asset exceeds maximum size:") || err.message.includes("Failed to resize asset below the maximum size:")) { return "Emote is too big. You can try to change it's size by using the \"size\" parameter." }
-    else if (err.message.includes("name[STRING_TYPE_REGEX]")) { return "Emote name is invalid. You can change the name with the \"name\" parameter." }
-    else return err.message
 }
