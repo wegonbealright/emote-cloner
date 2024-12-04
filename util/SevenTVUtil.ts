@@ -1,8 +1,14 @@
-import {Emote} from "./BetterTTVUtil";
+import { Emote } from "./BetterTTVUtil";
 
 
 export async function getEmoteDataFromURL(url: string) {
-    return await getEmoteData(url.split('/')[4].split('/')[0])
+    const match = url.match(/\/emotes\/([a-zA-Z0-9]+)/);
+    if (!match) {
+        throw new Error("Invalid 7TV emote URL");
+    }
+    const id = match[1];
+    return await getEmoteData(id);
+
 }
 
 interface SevenTVEmote {
@@ -34,17 +40,22 @@ export async function getEmoteData(id: string) {
     if (response.ok) {
         const emote = await response.json() as SevenTVEmote;
         if (emote.name === "*UnknownEmote") return undefined
+
+        const avatarURL = emote.owner.avatar_url.startsWith('https://')
+        ? emote.owner.avatar_url
+        : 'https:' + emote.owner.avatar_url;
+
         return {
             platform: '7tv',
             name: emote.name,
-            hostURL: 'https:' + emote.host.url + '/{{size}}',
+            hostURL: emote.host.url + '/{{size}}',
             animated: emote.animated,
             author: {
                 name: emote.owner.display_name,
-                avatar: 'https:' + emote.owner.avatar_url,
+                avatar: avatarURL,
             }
         } as Emote
-    }else{
+    } else {
         const text = await response.text()
         console.error(text)
         return undefined
